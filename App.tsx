@@ -16,8 +16,9 @@ const MainStackScreen = () => (
     <MainStack.Screen
       name="ColorPalette"
       component={ColorPalette}
-      // @ts-ignore
-      options={({ route }) => ({ title: route.params.paletteName })}
+      options={({ route }) => ({
+        title: route.params ? route.params.paletteName : '',
+      })}
     />
   </MainStack.Navigator>
 );
