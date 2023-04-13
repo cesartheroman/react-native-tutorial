@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 import PalettePreview from '../components/PalettePreview';
 
-const Home = ({ navigation }: any) => {
-  const [colors, setColors] = useState([]);
+const Home = ({ navigation, route }) => {
+  const [colorPalettes, setColorPalettes] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const newColorPalette = route.params
+    ? route.params.newColorPalette
+    : undefined;
 
   const getData = useCallback(async () => {
     try {
@@ -13,9 +16,9 @@ const Home = ({ navigation }: any) => {
         'https://color-palette-api.kadikraman.vercel.app/palettes',
       );
 
-      const colorPalettes = await response.json();
+      const palettes = await response.json();
 
-      setColors(colorPalettes);
+      setColorPalettes(palettes);
     } catch (e) {
       console.error(e);
     }
@@ -33,20 +36,34 @@ const Home = ({ navigation }: any) => {
     getData();
   }, [getData]);
 
+  useEffect(() => {
+    console.log(newColorPalette);
+    if (newColorPalette) {
+      setColorPalettes((prevPalettes) => [newColorPalette, ...prevPalettes]);
+    }
+  }, [newColorPalette]);
+
   return (
     <FlatList
       style={styles.list}
-      data={colors}
-      keyExtractor={(item) => item.colorName}
+      data={colorPalettes}
       renderItem={({ item }) => (
         <PalettePreview
-          key={item.hexCode}
           onPress={() => navigation.navigate('ColorPalette', item)}
           palette={item}
         />
       )}
       refreshing={isRefreshing}
       onRefresh={handleRefresh}
+      ListHeaderComponent={
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('AddNewPalete');
+          }}
+        >
+          <Text style={styles.buttonText}>Add a color scheme</Text>
+        </TouchableOpacity>
+      }
     />
   );
 };
@@ -55,6 +72,12 @@ const styles = StyleSheet.create({
   list: {
     padding: 10,
     backgroundColor: 'white',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'teal',
+    marginBottom: 10,
   },
 });
 
