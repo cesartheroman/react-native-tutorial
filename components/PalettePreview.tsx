@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const PalettePreview = ({ palette, onPress }) => {
+const PalettePreview = ({ palette, onPress }: any) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Text style={styles.text}>{palette.paletteName}</Text>

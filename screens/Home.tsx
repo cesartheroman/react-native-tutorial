@@ -37,10 +37,8 @@ const Home = ({ navigation }: any) => {
     <FlatList
       style={styles.list}
       data={colors}
-      keyExtractor={(item) => item.colorName}
       renderItem={({ item }) => (
         <PalettePreview
-          key={item.hexCode}
           onPress={() => navigation.navigate('ColorPalette', item)}
           palette={item}
         />
@@ -50,10 +48,10 @@ const Home = ({ navigation }: any) => {
       ListHeaderComponent={
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ColorPaletteModal');
+            navigation.navigate('AddNewPalete');
           }}
         >
-          <Text>Launch Modal</Text>
+          <Text>Add a color scheme</Text>
         </TouchableOpacity>
       }
     />
